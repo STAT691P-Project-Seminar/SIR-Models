@@ -1,3 +1,3 @@
 library(shiny)
 
-runApp(paste(getwd() ,"/app/MA-Covid19", sep=""))
+runApp(paste(getwd() ,"/SIR-Models/app/core", sep=""))

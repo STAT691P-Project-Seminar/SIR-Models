@@ -5,8 +5,8 @@ library(tidyverse)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-
-state.data = read.csv("/Users/sixtusdakurah/Documents/GRAD SCHOOL/SPRING 2020/Project Seminar/SIR-Models/app/MA-Covid19/StateLevelData.csv")
+  
+state.data = read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/StateLevelData.csv")
 # add date time stamp
 getDate <- function(str){
   ls = as.list(str_split(str , '/'))[[1]] #month, day, year
