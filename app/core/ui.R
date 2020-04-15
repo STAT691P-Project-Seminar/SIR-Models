@@ -76,7 +76,7 @@ ui <- dashboardPagePlus(
                              enable_dropdown = TRUE,
                              p(
                                plotOutput("stateInfectionsDailyPlot"),
-                               dateRangeInput("daterange1", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
+                               dateRangeInput("daterange_state_daily", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
                              )
                            )
                            
@@ -96,7 +96,7 @@ ui <- dashboardPagePlus(
                             enable_dropdown = TRUE,
                             p(
                               plotOutput("countyInfectionsPlot"),
-                              dateRangeInput("daterange1", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
+                              dateRangeInput("daterange_county_cumm", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
                             )
                           ),
                           
@@ -110,7 +110,7 @@ ui <- dashboardPagePlus(
                             enable_dropdown = TRUE,
                             p(
                               plotOutput("countyInfectionsDailyPlot"),
-                              dateRangeInput("daterange1", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
+                              dateRangeInput("daterange_county_daily", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
                             )
                           )
                           
