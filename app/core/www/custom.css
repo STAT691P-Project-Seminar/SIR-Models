@@ -1,0 +1,11 @@
+/* add custom css here */
+.main-header .logo:hover {background-color: #f4b943;}
+.main-header .navbar .sidebar-toggle:hover{background-color: #ff69b4;}
+.user-panel{background-color: red; display: none;}
+.navbar-fixed-bottom ul{
+
+  display: flex;
+  justify-content: center;
+  margin-left:25%;
+  
+}

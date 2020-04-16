@@ -5,7 +5,8 @@ library(tidyverse)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-  
+
+## add all data processong stuffs here  
 state.data = read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/StateLevelData.csv")
 # add date time stamp
 getDate <- function(str){
@@ -24,31 +25,47 @@ getPlottableDates <- function(str){
 state.data$timestamp <- sapply(state.data$Date, getDate)
 state.data$timeplot <- sapply(state.data$timestamp, getPlottableDates)
 state.data$timeplot <- factor(state.data$timeplot, levels = state.data$timeplot)
+# add the daily infections
+daily_cases <- c(state.data$Cases)[1]
+for (row in 2:dim(state.data)[1]){ daily_cases = c(daily_cases, (state.data$Cases[row]-state.data$Cases[row-1]) ) }
+state.data$daily_cases = daily_cases
 print(state.data)
+
+### data processing ends here
   
   ##gather inputs
-  date_range <- reactive({paste(input$daterange1)})
+  date_range <- reactive({paste(input$daterange_cummulative)})
+  cumm_daily_switch <- reactive({input$stateCummDailySwitch})
   
   ##listen to event change
   observe({
     #set the default values
+    # date range
     date_range <- date_range()
     start_date = as.list(str_split(date_range, ' '))[[1]]
     start_date.ts = as.numeric(as.POSIXct(as.Date(start_date)))
     end_date = as.list(str_split(date_range, ' '))[[2]]
     end_date.ts = as.numeric(as.POSIXct(as.Date(end_date)))
     
-    ###varying delta
-    pltStateInfections <- reactive(
+    
+  
+    plotStateInfections <- reactive(
       {
         new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
-        print(start_date)
-        ggplot(data = new.data, mapping = aes(x = timeplot, y = Cases)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + xlab("Date") #+ scale_x_date(labels = date_format("%d-%m"))
+        if(cumm_daily_switch()){
+          # make the cummulative plot
+          print(new.data)
+          ggplot(data = new.data, mapping = aes(x = timeplot, y = Cases)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + xlab("Date") + ylab("Cummulative Cases") #+ scale_x_date(labels = date_format("%d-%m"))
+        }else{
+          # make the daily plot
+          ggplot(data = new.data, mapping = aes(x = timeplot, y = daily_cases)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + xlab("Date") + ylab("Daily Cases") #+ scale_x_date(labels = date_format("%d-%m"))
+        }
+        
       }
     )
     ##tie to a render event
     output$stateInfectionsPlot <- renderPlot({
-      pltStateInfections()
+      plotStateInfections()
     })
     
     #print(as.double(sliderVals()[1]))
