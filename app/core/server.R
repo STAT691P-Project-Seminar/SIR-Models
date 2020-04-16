@@ -2,36 +2,12 @@ library(shiny)
 library(ggplot2)
 library(anytime)
 library(tidyverse)
+library(miceadds) # allows the sourcing of all files
+# import widgets
+source.all("../modules/", grepstring="\\.R")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-
-## add all data processong stuffs here  
-state.data = read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/StateLevelData.csv")
-# add date time stamp
-getDate <- function(str){
-  ls = as.list(str_split(str , '/'))[[1]] #month, day, year
-  date.char = paste(ls[3], "-", ls[1], "-", ls[2], sep='')
-  timestamp = as.numeric(as.POSIXct(as.Date(date.char)))
-  return(timestamp)
-}
-
-getPlottableDates <- function(str){
-  myDate = anytime(str + (24*60*60))
-  newDate = paste(format(myDate,"%b"), as.numeric(format(myDate,"%d")), sep=" ")
-  return(newDate)
-}
-
-state.data$timestamp <- sapply(state.data$Date, getDate)
-state.data$timeplot <- sapply(state.data$timestamp, getPlottableDates)
-state.data$timeplot <- factor(state.data$timeplot, levels = state.data$timeplot)
-# add the daily infections
-daily_cases <- c(state.data$Cases)[1]
-for (row in 2:dim(state.data)[1]){ daily_cases = c(daily_cases, (state.data$Cases[row]-state.data$Cases[row-1]) ) }
-state.data$daily_cases = daily_cases
-print(state.data)
-
-### data processing ends here
   
   ##gather inputs
   date_range <- reactive({paste(input$daterange_cummulative)})
