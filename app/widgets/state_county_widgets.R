@@ -5,17 +5,18 @@ stateCountyWidget <- function(addMap){
             box(
               width = NULL,
               height = 80,
-              title = h4("Massachusetts State Department Data", align = "center"),
+              title = h4("Data From Mass.gov", align = "center"),
               status = NULL
             ),
             
             fluidRow(
               # # A static infoBox
-              infoBox("Confirmed Cases", "--", width = 6, icon = icon("check-circle"), fill = TRUE),
-              infoBox("Deaths", "--", width = 6, icon = icon("dizzy"), fill = TRUE)
+              #infoBox("Confirmed Cases", "--", width = 6, icon = icon("check-circle"), fill = TRUE),
+              #infoBox("Deaths", "--", width = 6, icon = icon("dizzy"), fill = TRUE),
               # Dynamic infoBoxes
-              #infoBoxOutput("confirmedCases")
-              # infoBoxOutput("deaths")
+              infoBoxOutput("confirmedCasesSC"),
+              infoBoxOutput("deathsSC"),
+              infoBoxOutput("recoveredSC")
             ),
             
             # add map

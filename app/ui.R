@@ -3,11 +3,12 @@ library(shiny)
 library(shinydashboard)
 library(shinydashboardPlus)
 library(shinyWidgets)
+library(dashboardthemes)
 library(leaflet)
 library(plotly)
 library(miceadds) # allows the sourcing of all files
 # import widgets
-source.all("../widgets/", grepstring="\\.R")
+source.all("widgets/", grepstring="\\.R")
 
 
 # Define UI for application that draws a histogram
@@ -35,6 +36,10 @@ ui <- dashboardPagePlus(
     
     #dashboard body starts here
     dashboardBody(
+      ### changing theme
+      shinyDashboardThemes(
+        theme = "grey_dark"
+      ),
       # add css file here
       tags$head( tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")),
       
@@ -54,11 +59,18 @@ ui <- dashboardPagePlus(
                           modelsSidebarPanel(),
                           modelsMainPanel()
                           
-                          ),
+                          )
                  # news tab
-                 tabPanel(title = "News", icon = icon("rss"))
+                 #tabPanel(title = "News", icon = icon("rss"))
       ) # navbar page ends here
     ), # dashboard ends here
+    
+    box(
+      width = NULL,
+      height = 100,
+      title = h4(""),
+      status = NULL
+    ),
     
     rightSidebar(
       background = "dark",
