@@ -1,6 +1,6 @@
-#runApp(paste(getwd() ,"/app/core", sep=""))
+# source the core files
+source("ui.R")
+source("server.R")
 
-source("core/ui.R")
-source("core/server.R")
-
+# compile app
 shinyApp(ui = ui, server = server)

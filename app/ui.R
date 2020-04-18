@@ -1,17 +1,13 @@
-rm(list = ls())
-library(shiny)
-library(shinydashboard)
-library(shinydashboardPlus)
-library(shinyWidgets)
-library(dashboardthemes)
-library(leaflet)
-library(plotly)
-library(miceadds) # allows the sourcing of all files
-# import widgets
+library(modules) # must load
+# load packages
+packages.Self <- modules::use("core/libs.R")
+packages.Self$getPackages("ui")
+
+# source widgets
 source.all("widgets/", grepstring="\\.R")
 
 
-# Define UI for application that draws a histogram
+# Define UI for the application
 ui <- dashboardPagePlus(
   
     # dashboard header  begins here

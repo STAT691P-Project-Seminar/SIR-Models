@@ -1,9 +1,9 @@
-library(shiny)
-library(ggplot2)
-library(anytime)
-library(tidyverse)
-library(miceadds) # allows the sourcing of all files
-# import widgets
+library(modules) # must load
+# load packages
+packages.Self <- modules::use("core/libs.R")
+packages.Self$getPackages("server")
+
+# source modules
 source.all("modules/", grepstring="\\.R")
 
 # Define server logic required to draw a histogram
