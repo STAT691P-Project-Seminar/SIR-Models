@@ -33,10 +33,15 @@ getStateData <- function(){
   state.data$timeplot <- sapply(state.data$timestamp, getPlottableDates)
   state.data$timeplot <- factor(state.data$timeplot, levels = state.data$timeplot) # this prevents ordering
   
-  # add the daily infections
-  daily_cases <- c(state.data$Cases)[1]
-  for (row in 2:dim(state.data)[1]){ daily_cases = c(daily_cases, (state.data$Cases[row]-state.data$Cases[row-1]) ) }
-  state.data$daily_cases = daily_cases
+  # add the daily infections and deaths
+  DailyCases <- c(state.data$Cases)[1]
+  DailyDeaths <- c(state.data$Deaths)[1]
+  for (row in 2:dim(state.data)[1]){ 
+    DailyCases = c(DailyCases, (state.data$Cases[row]-state.data$Cases[row-1]) ) 
+    DailyDeaths = c(DailyDeaths, (state.data$Deaths[row]-state.data$Deaths[row-1]) ) 
+    }
+  state.data$DailyCases = DailyCases
+  state.data$DailyDeaths = DailyDeaths
   
   return(state.data)
 }

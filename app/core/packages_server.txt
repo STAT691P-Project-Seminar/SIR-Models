@@ -7,3 +7,7 @@ miceadds
 anytime
 
 tidyverse
+
+ggplot2
+
+plotly

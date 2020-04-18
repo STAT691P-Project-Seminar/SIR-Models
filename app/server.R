@@ -7,44 +7,54 @@ packages.Self$getPackages("server")
 source.all("modules/", grepstring="\\.R")
 
 # Define server logic required to draw a histogram
-server <- shinyServer(function(input, output) {
+server <- shinyServer(function(input, output, session) {
   
   #get data files
   state.data <- getStateData()
   race.data <- getRaceData()
   
   ##gather inputs
-  date_range <- reactive({paste(input$daterange_cummulative)})
+  date_range <- reactive({paste(input$daterangeCummulativeState)})
   cumm_daily_switch <- reactive({input$stateCummDailySwitch})
+  deaths_confirm <- reactive({input$deathConfirmedCases})
+  
+  #set the default values
+  # update the date range input values
+  updateDateRangeInput(session, "daterangeCummulativeState",
+                       start = anydate(min(state.data$timestamp)),
+                       end = paste(anydate(max(state.data$timestamp) + (24*60*60))),
+                       #min = anydate(min(state.data$timestamp) + (24*60*60)), this does not work .. control it below
+                       max = anydate(max(state.data$timestamp) + (24*60*60))
+  )
   
   ##listen to event change
   observe({
-    #set the default values
-    # date range
+    # construct user selected input range
     date_range <- date_range()
     start_date = as.list(str_split(date_range, ' '))[[1]]
     start_date.ts = as.numeric(as.POSIXct(as.Date(start_date)))
+    if (start_date.ts < min(state.data$timestamp)){ start_date.ts =   min(state.data$timestamp)}
     end_date = as.list(str_split(date_range, ' '))[[2]]
     end_date.ts = as.numeric(as.POSIXct(as.Date(end_date)))
+    # ensure that the max does not fall below the min
+    if (end_date.ts < start_date.ts){ end_date.ts = start_date.ts}
     
+    print(deaths_confirm())
+    print(cumm_daily_switch())
   
-    plotStateInfections <- reactive(
-      {
-        new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
-        if(cumm_daily_switch()){
-          # make the cummulative plot
-          print(new.data)
-          ggplot(data = new.data, mapping = aes(x = timeplot, y = Cases)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + xlab("Date") + ylab("Cummulative Cases") #+ scale_x_date(labels = date_format("%d-%m"))
+    plotStateCases <- reactive(
+      { 
+        if(!deaths_confirm()){
+          displayPrettyBarChartConfirmed(new.data, start_date.ts, end_date.ts, cumm_daily_switch())
         }else{
-          # make the daily plot
-          ggplot(data = new.data, mapping = aes(x = timeplot, y = daily_cases)) + geom_point() + theme(axis.text.x = element_text(angle = 90)) + xlab("Date") + ylab("Daily Cases") #+ scale_x_date(labels = date_format("%d-%m"))
+          displayPrettyBarChartDeaths(new.data, start_date.ts, end_date.ts, cumm_daily_switch()) 
         }
         
-      }
-    )
-    ##tie to a render event
-    output$stateInfectionsPlot <- renderPlot({
-      plotStateInfections()
+      })
+    
+    # tie to a render event
+    output$stateInfectionsPlot <- renderPlotly({
+      plotStateCases()
     })
     
     

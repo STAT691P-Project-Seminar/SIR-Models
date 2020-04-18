@@ -66,3 +66,85 @@ displayCasesRaceDistribution <- function(data){
   infoBox("Missing", "--", width = 12, subtitle = "%",fill = TRUE)
   
 }
+
+
+# for plotting deaths and confirmed cases
+
+displayPrettyBarChartConfirmed <- function(new.data, start_date.ts, end_date.ts, cumm.cases){
+  
+  new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
+  # replace the date for ggplot
+  new.data$Date <- new.data$timeplot
+  if(!cumm.cases){
+    # make the cummulative plot
+    #print(new.data)
+    g <- ggplot(data = new.data, mapping = aes(x = Date, y = Cases)) + 
+      theme(
+        axis.text.x = element_text(angle = 90, colour = "white"), 
+        axis.text.y = element_text(colour = "white"),
+        axis.title.y = element_text(colour = "white"),
+        legend.position="none",
+        plot.background = element_rect(fill = "#282b29"), 
+        panel.background = element_rect(fill = "#282b29"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+      ) + 
+      geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Cummulative Confirmed Cases")
+    ggplotly(g, tooltip = c("Date", "Cases"))
+  }else{
+    # make the daily plot
+    g <- ggplot(data = new.data, mapping = aes(x = Date, y = DailyCases)) + 
+      theme(
+        axis.text.x = element_text(angle = 90, colour = "white"), 
+        axis.text.y = element_text(colour = "white"),
+        axis.title.y = element_text(colour = "white"),
+        legend.position="none",
+        plot.background = element_rect(fill = "#282b29"), 
+        panel.background = element_rect(fill = "#282b29"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+      ) + 
+      geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Daily Confirmed Cases")
+    ggplotly(g, tooltip = c("Date", "DailyCases"))
+  }
+}
+
+displayPrettyBarChartDeaths <- function(new.data, start_date.ts, end_date.ts, cumm.cases){
+  
+  new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
+  # replace the date for ggplot
+  new.data$Date <- new.data$timeplot
+  if(!cumm.cases){
+    # make the cummulative plot
+    #print(new.data)
+    g <- ggplot(data = new.data, mapping = aes(x = Date, y = Deaths)) + 
+      theme(
+        axis.text.x = element_text(angle = 90, colour = "white"), 
+        axis.text.y = element_text(colour = "white"),
+        axis.title.y = element_text(colour = "white"),
+        legend.position="none",
+        plot.background = element_rect(fill = "#282b29"), 
+        panel.background = element_rect(fill = "#282b29"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+      ) + 
+      geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Cummulative Deaths")
+    ggplotly(g, tooltip = c("Date", "Deaths"))
+    #g + theme(axis.text.x = element_text(angle = 90)) 
+  }else{
+    # make the daily plot
+    g <- ggplot(data = new.data, mapping = aes(x = Date, y = DailyDeaths)) + 
+      theme(
+        axis.text.x = element_text(angle = 90, colour = "white"), 
+        axis.text.y = element_text(colour = "white"),
+        axis.title.y = element_text(colour = "white"),
+        legend.position="none",
+        plot.background = element_rect(fill = "#282b29"), 
+        panel.background = element_rect(fill = "#282b29"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+      ) + 
+      geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Daily Deaths")
+    ggplotly(g, tooltip = c("Date", "DailyDeaths"))
+  }
+}
