@@ -57,29 +57,19 @@ homeWidget <- function(){
             ),
             
             fluidRow(
-              infoBox("Male Deaths", "--", subtitle = "%", width = 4, icon = icon("male"), fill = TRUE, color = "black"),
-              infoBox("Female Deaths", "--", subtitle = "%", width = 4, icon = icon("female"), fill = TRUE, color = "black"),
-              infoBox("Other Deaths", "--", width = 4, subtitle = "%", icon = icon("genderless"), fill = TRUE, color = "black"),
+              #infoBox("Male Deaths", "--", subtitle = "%", width = 4, icon = icon("male"), fill = TRUE, color = "black"),
+              #infoBox("Female Deaths", "--", subtitle = "%", width = 4, icon = icon("female"), fill = TRUE, color = "black"),
+              #infoBox("Other Deaths", "--", width = 4, subtitle = "%", icon = icon("genderless"), fill = TRUE, color = "black"),
               infoBoxOutput("maleDeaths"),
               infoBoxOutput("femaleDeaths"),
               infoBoxOutput("otherGenderDeaths")
             ),
             
             fluidRow(
-              box( title =  h4("Race Statistics", align = "center"), width = 12, fill = TRUE, background = "black")
+              box( title =  h4("Confirmed Cases by Race", align = "center"), width = 12, fill = TRUE, background = "black")
             ),
             
             fluidRow(
-              column(
-                width = 6,
-                box( title =  h4("Confirmed Cases", align = "center"), width = 12, fill = TRUE, background = "black"),
-                infoBox("Hispanic", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Non-Hispanic White", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Black/African American", "--", width = 12, subtitle = "%",fill = TRUE, color = "black"),
-                infoBox("Non-Hispanic Asian", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Non-Hispanic Other", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Unknown", "--", width = 12, subtitle = "%",fill = TRUE, color = "black"),
-                infoBox("Missing", "--", width = 12, subtitle = "%",fill = TRUE, color = "black"),
                 infoBoxOutput("hispanicCases"),
                 infoBoxOutput("nonHispanicWhiteCases"),
                 infoBoxOutput("blackCases"),
@@ -87,17 +77,11 @@ homeWidget <- function(){
                 infoBoxOutput("otherCases"),
                 infoBoxOutput("unknownCases"),
                 infoBoxOutput("missingCases")
-              ),
-              column(
-                width = 6,
-                box( title =  h4("Deaths", align = "center"), width = 12, fill = TRUE, background = "black"),
-                infoBox("Hispanic", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Non-Hispanic White", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Black/African American", "--", width = 12, subtitle = "%",fill = TRUE, color = "black"),
-                infoBox("Non-Hispanic Asian", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Non-Hispanic Other", "--", subtitle = "%", width = 12, fill = TRUE, color = "black"),
-                infoBox("Unknown", "--", width = 12, subtitle = "%",fill = TRUE, color = "black"),
-                infoBox("Missing", "--", width = 12, subtitle = "%",fill = TRUE, color = "black"),
+            ),
+            fluidRow(
+              box( title =  h4("Deaths by Race", align = "center"), width = 12, fill = TRUE, background = "black")
+            ),
+            fluidRow(
                 infoBoxOutput("hispanicDeaths"),
                 infoBoxOutput("nonHispanicWhiteDeaths"),
                 infoBoxOutput("blackDeaths"),
@@ -105,8 +89,6 @@ homeWidget <- function(){
                 infoBoxOutput("otherRaceDeaths"),
                 infoBoxOutput("unknownDeaths"),
                 infoBoxOutput("missingDeaths")
-
-              )
             )
   )
 }

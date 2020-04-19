@@ -106,6 +106,23 @@ server <- shinyServer(function(input, output, session) {
       displayOtherCasesDistribution( formatC(vec.values[1], big.mark = ",", format = "d"), round(vec.values[2], 2))
     })
     
+    # race distribution plots
+    raceCases = displayCasesRaceDistribution(race.data)
+    output$hispanicCases <- renderInfoBox({raceCases$hisp})
+    output$nonHispanicWhiteCases <- renderInfoBox({ raceCases$white })
+    output$blackCases <- renderInfoBox({ raceCases$black })
+    output$asianCases <- renderInfoBox({ raceCases$asian })
+    output$otherCases <- renderInfoBox({ raceCases$other })
+    output$unknownCases <- renderInfoBox({ raceCases$unknown })
+    
+    deathCases = displayDeathsRaceDistribution(race.data)
+    output$hispanicDeaths <- renderInfoBox({deathCases$hisp})
+    output$nonHispanicWhiteDeaths <- renderInfoBox({ deathCases$white })
+    output$blackDeaths <- renderInfoBox({ deathCases$black })
+    output$asianDeaths <- renderInfoBox({ deathCases$asian })
+    output$otherRaceDeaths <- renderInfoBox({ deathCases$other })
+    output$unknownDeaths <- renderInfoBox({ deathCases$unknown })
+    
   })
 
   

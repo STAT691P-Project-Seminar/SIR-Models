@@ -8,7 +8,7 @@ displayConfirmedCases <- function(value){
 
 displayTotalDeaths <- function(value){
   
-  infoBox( value = h5('Deaths'), title = h4(value), width = 4, icon = icon("dizzy"), fill = TRUE, color = "black")
+  infoBox( value = h5('Deaths'), title = h4(style="color: red", value), width = 4, icon = icon("dizzy"), fill = TRUE, color = "black")
   
 }
 
@@ -57,13 +57,30 @@ displayOtherCasesDistribution <- function(val, percentage){
 displayCasesRaceDistribution <- function(data){
   total_cases = data[8, 2]; total_deaths = data[8, 3]; 
   
-  infoBox("Hispanic", "--", subtitle = "%", width = 12, fill = TRUE)
-  infoBox("Non-Hispanic White", "--", subtitle = "%", width = 12, fill = TRUE)
-  infoBox("Black/African American", "--", width = 12, subtitle = "%",fill = TRUE)
-  infoBox("Non-Hispanic Asian", "--", subtitle = "%", width = 12, fill = TRUE)
-  infoBox("Non-Hispanic Other", "--", subtitle = "%", width = 12, fill = TRUE)
-  infoBox("Unknown", "--", width = 12, subtitle = "%",fill = TRUE)
-  infoBox("Missing", "--", width = 12, subtitle = "%",fill = TRUE)
+  hisp = infoBox("Hispanic", value = formatC(data[1, 2], big.mark = ","), subtitle = paste( round(data[1, 2]/total_cases *100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  white = infoBox("Non-Hispanic White", value = formatC(data[2, 2], big.mark = ","), subtitle = paste(round(data[2, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  black = infoBox("Black/African American", value = formatC(data[3, 2], big.mark = ","), width = 12, subtitle = paste(round(data[3, 2]/total_cases*100, 2), "%", sep=""),fill = TRUE, color = "black")
+  asian = infoBox("Non-Hispanic Asian", value = formatC(data[4, 2], big.mark = ","), subtitle = paste(round(data[4, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  other = infoBox("Non-Hispanic Other", value = formatC(data[5, 2], big.mark = ","), subtitle = paste(round(data[5, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  unknown = infoBox("Unknown/Missing", value = formatC(data[6, 2]+data[7, 2], big.mark = ","), width = 12, subtitle = paste(round((data[6, 2]+data[7, 2])/total_cases*100, 2), "%", sep=""),fill = TRUE, color = "black")
+  #missing = infoBox("Missing", value = formatC(data[7, 2], big.mark = ","), width = 12, subtitle = paste(round(data[7, 2]/total_cases*100, 2), "%", sep=""),fill = TRUE)
+  ls = list(hisp = hisp, white=white, black = black, asian = asian, other = other, unknown = unknown)
+  return(ls)
+  
+}
+
+displayDeathsRaceDistribution <- function(data){
+  total_deaths = data[8, 3]; 
+  #infoBox("Missing", value = data[7, 3], width = 12, subtitle = paste(data[7, 3]/total_deaths, "%", sep=""),fill = TRUE)
+  hisp = infoBox("Hispanic", value = data[1, 3], subtitle = paste(round(data[1, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  white = infoBox("Non-Hispanic White", value = data[2, 3], subtitle = paste(round(data[2, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  black = infoBox("Black/African American", value = data[3, 3], width = 12, subtitle = paste(round(data[3, 3]/total_deaths*100, 2), "%", sep=""),fill = TRUE, color = "black")
+  asian = infoBox("Non-Hispanic Asian", value = data[4, 3], subtitle = paste(round(data[4, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  other = infoBox("Non-Hispanic Other", value = data[5, 3], subtitle = paste(round(data[5, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  unknown = infoBox("Unknown/Missing", value = data[6, 3]+data[7, 3], width = 12, subtitle = paste(round((data[6, 3]+data[7, 3])/total_deaths*100, 2), "%", sep=""),fill = TRUE, color = "black")
+  #missing = infoBox("Missing", value = data[7, 3], width = 12, subtitle = paste(data[7, 3]/total_deaths*100, "%", sep=""),fill = TRUE)
+  ls = list(hisp = hisp, white=white, black = black, asian = asian, other = other, unknown = unknown)
+  return(ls)
   
 }
 
