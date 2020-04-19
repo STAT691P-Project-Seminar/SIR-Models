@@ -71,8 +71,6 @@ displayCasesRaceDistribution <- function(data){
 # for plotting deaths and confirmed cases
 
 displayPrettyBarChartConfirmed <- function(new.data, start_date.ts, end_date.ts, cumm.cases){
-  
-  new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
   # replace the date for ggplot
   new.data$Date <- new.data$timeplot
   if(!cumm.cases){
@@ -110,8 +108,6 @@ displayPrettyBarChartConfirmed <- function(new.data, start_date.ts, end_date.ts,
 }
 
 displayPrettyBarChartDeaths <- function(new.data, start_date.ts, end_date.ts, cumm.cases){
-  
-  new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
   # replace the date for ggplot
   new.data$Date <- new.data$timeplot
   if(!cumm.cases){

@@ -11,6 +11,7 @@ getStateData <- function(){
 
   # load the data files from guthub 
   state.data = read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/StateLevelData.csv")
+  #state.data = read.csv("../data/StateLevelData.csv")
   
   # add date time stamp
   # date_char has format month/day/year

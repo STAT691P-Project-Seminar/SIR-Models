@@ -8,6 +8,8 @@ anytime
 
 tidyverse
 
+Cairo
+
 ggplot2
 
 plotly

@@ -22,7 +22,7 @@ server <- shinyServer(function(input, output, session) {
   # update the date range input values
   updateDateRangeInput(session, "daterangeCummulativeState",
                        start = anydate(min(state.data$timestamp)),
-                       end = paste(anydate(max(state.data$timestamp) + (24*60*60))),
+                       end = anydate(max(state.data$timestamp) + (24*60*60)),
                        #min = anydate(min(state.data$timestamp) + (24*60*60)), this does not work .. control it below
                        max = anydate(max(state.data$timestamp) + (24*60*60))
   )
@@ -31,16 +31,18 @@ server <- shinyServer(function(input, output, session) {
   observe({
     # construct user selected input range
     date_range <- date_range()
+    #print(date_range)
     start_date = as.list(str_split(date_range, ' '))[[1]]
     start_date.ts = as.numeric(as.POSIXct(as.Date(start_date)))
     if (start_date.ts < min(state.data$timestamp)){ start_date.ts =   min(state.data$timestamp)}
+    print(max(state.data$timestamp))
     end_date = as.list(str_split(date_range, ' '))[[2]]
     end_date.ts = as.numeric(as.POSIXct(as.Date(end_date)))
     # ensure that the max does not fall below the min
     if (end_date.ts < start_date.ts){ end_date.ts = start_date.ts}
     
-    print(deaths_confirm())
-    print(cumm_daily_switch())
+    # subset the relevant data
+    new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
   
     plotStateCases <- reactive(
       { 
@@ -53,12 +55,10 @@ server <- shinyServer(function(input, output, session) {
       })
     
     # tie to a render event
-    output$stateInfectionsPlot <- renderPlotly({
+    output$stateCasesPlot <- renderPlotly({
       plotStateCases()
     })
     
-    
-    # info box output
     # confirmed cases
     output$confirmedCases <- renderInfoBox({
       displayConfirmedCases(formatC( state.data$Cases[length(state.data$Cases)], big.mark = ","))

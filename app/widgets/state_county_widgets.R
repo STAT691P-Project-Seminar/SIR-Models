@@ -33,7 +33,7 @@ stateCountyWidget <- function(addMap){
                 switchInput(inputId = "stateCummDailySwitch", label = NULL, offLabel = "Cummulative", onLabel = "Daily", inline = TRUE,  offStatus = "success", onStatus = "primary", size = "mini"),
                 switchInput(inputId = "deathConfirmedCases", label = NULL, offLabel = "Confirmed Cases", onLabel = "Deaths", inline = TRUE,  offStatus = "warning", onStatus = "danger", size = "mini"),
                 # switch between these plots
-                plotlyOutput("stateInfectionsPlot"),
+                plotlyOutput("stateCasesPlot"),
                 dateRangeInput("daterangeCummulativeState", "Date range:", start = "2020-01-02", end   = "2020-12-31", format = "mm/dd/yy")
               )
             ),
