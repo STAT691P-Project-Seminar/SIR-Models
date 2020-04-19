@@ -1,4 +1,7 @@
 library(modules) # must load
+
+
+
 # load packages
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("server")
@@ -13,6 +16,7 @@ server <- shinyServer(function(input, output, session) {
   #get data files
   state.data <- getStateData()
   race.data <- getRaceData()
+  county.data <- getCountyData()
   
   ##gather inputs
   date_range <- reactive({paste(input$daterangeCummulativeState)})

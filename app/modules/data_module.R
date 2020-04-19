@@ -7,6 +7,11 @@ getRaceData <- function(){
   return(race.data)
 }
 
+getCountyData <- function(){
+  county.data <- read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/CountyLevelData-NA-Removed.csv")
+  return(county.data)
+}
+
 getStateData <- function(){
 
   # load the data files from guthub 
