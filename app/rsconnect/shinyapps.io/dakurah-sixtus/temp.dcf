@@ -1,12 +1,12 @@
 name: temp
-title: Temp
+title:
 username:
 account: dakurah-sixtus
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2134101
-bundleId: 3032638
+bundleId: 3032791
 url: https://dakurah-sixtus.shinyapps.io/temp/
-when: 1587255057.12873
+when: 1587259711.17293
 asMultiple: FALSE
 asStatic: FALSE

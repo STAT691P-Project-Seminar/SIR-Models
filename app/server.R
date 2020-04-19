@@ -2,6 +2,7 @@ library(modules) # must load
 # load packages
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("server")
+library(shiny); library(miceadds); library(anytime); library(ggplot2); library(plotly); library(stringr);
 
 # source modules
 source.all("modules/", grepstring="\\.R")
@@ -35,7 +36,7 @@ server <- shinyServer(function(input, output, session) {
     start_date = as.list(str_split(date_range, ' '))[[1]]
     start_date.ts = as.numeric(as.POSIXct(as.Date(start_date)))
     if (start_date.ts < min(state.data$timestamp)){ start_date.ts =   min(state.data$timestamp)}
-    print(max(state.data$timestamp))
+    #print(max(state.data$timestamp))
     end_date = as.list(str_split(date_range, ' '))[[2]]
     end_date.ts = as.numeric(as.POSIXct(as.Date(end_date)))
     # ensure that the max does not fall below the min
