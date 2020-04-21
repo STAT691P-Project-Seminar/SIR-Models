@@ -161,3 +161,41 @@ displayPrettyBarChartDeaths <- function(new.data, start_date.ts, end_date.ts, cu
     ggplotly(g, tooltip = c("Date", "DailyDeaths"))
   }
 }
+
+displayPrettyChartCounty <- function(new.data2, start_date.ts2, end_date.ts2){
+  # replace the date for ggplot
+  new.data2$Date <- new.data2$timeplot
+  #print(new.data2)
+  g <- ggplot(data = new.data2, mapping = aes(x = Date, y = Cases)) + 
+        theme(
+        axis.text.x = element_text(angle = 90, colour = "white"), 
+        axis.text.y = element_text(colour = "white"),
+        axis.title.y = element_text(colour = "white"),
+        legend.position="none",
+        plot.background = element_rect(fill = "#282b29"), 
+        panel.background = element_rect(fill = "#282b29"),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()
+      ) + 
+      geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Confirmed Cases")
+    ggplotly(g, tooltip = c("Date", "Cases"))
+}
+
+displayPrettyChartCounty_pop <- function(new.data2, start_date.ts2, end_date.ts2){
+  # replace the date for ggplot
+  new.data2$Date <- new.data2$timeplot
+  #print(new.data2)
+  g <- ggplot(data = new.data2, mapping = aes(x = Date, y = Cases)) + 
+    theme(
+      axis.text.x = element_text(angle = 90, colour = "white"), 
+      axis.text.y = element_text(colour = "white"),
+      axis.title.y = element_text(colour = "white"),
+      legend.position="none",
+      plot.background = element_rect(fill = "#282b29"), 
+      panel.background = element_rect(fill = "#282b29"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    ) + 
+    geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Confirmed Cases Per 1000 Pop")
+  ggplotly(g, tooltip = c("Date", "Cases"))
+}

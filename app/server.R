@@ -16,12 +16,22 @@ server <- shinyServer(function(input, output, session) {
   #get data files
   state.data <- getStateData()
   race.data <- getRaceData()
-  county.data <- getCountyData()
+  county.data <- getCountyData_TS()
+  county.data.daily <- getCountyData_Daily()
+  county.data.pop <- getCountyData_Pop()
   
   #gather inputs
   date_range <- reactive({paste(input$daterangeCummulativeState)})
   cumm_daily_switch <- reactive({input$stateCummDailySwitch})
   deaths_confirm <- reactive({input$deathConfirmedCases})
+  
+  date_range2 <- reactive({paste(input$daterange_cummulative_county)}) 
+  cumm_daily_switch2 <- reactive({input$countyCummDailySwitch})
+  select_county <- reactive({paste(input$county)})
+  
+  date_range_p <- reactive({paste(input$daterange_cummulative_county_P)}) 
+  pop_confirm <- reactive({input$countyPopSwitch})
+  select_county_p <- reactive({paste(input$county_p)})
   
   #set the default values
   # update the date range input values
@@ -30,6 +40,20 @@ server <- shinyServer(function(input, output, session) {
                        end = anydate(max(state.data$timestamp) + (24*60*60)),
                        #min = anydate(min(state.data$timestamp) + (24*60*60)), this does not work .. control it below
                        max = anydate(max(state.data$timestamp) + (24*60*60))
+  )
+  
+  updateDateRangeInput(session, "daterange_cummulative_county",
+                       start = anydate(min(county.data$timestamp)),
+                       end = anydate(max(county.data$timestamp) + (24*60*60)),
+                       #min = anydate(min(state.data$timestamp) + (24*60*60)), this does not work .. control it below
+                       max = anydate(max(county.data$timestamp) + (24*60*60))
+  )
+  
+  updateDateRangeInput(session, "daterange_cummulative_county_P",
+                       start = anydate(min(county.data$timestamp)),
+                       end = anydate(max(county.data$timestamp) + (24*60*60)),
+                       #min = anydate(min(state.data$timestamp) + (24*60*60)), this does not work .. control it below
+                       max = anydate(max(county.data$timestamp) + (24*60*60))
   )
   
   ##listen to event change
@@ -67,9 +91,27 @@ server <- shinyServer(function(input, output, session) {
     # ensure that the max does not fall below the min
     if (end_date.ts < start_date.ts){ end_date.ts = start_date.ts}
     
+    date_range_p <- date_range_p()
+    start_date_p = as.list(str_split(date_range_p, ' '))[[1]]
+    start_date.ts_p = as.numeric(as.POSIXct(as.Date(start_date_p)))
+    if (start_date.ts_p < min(county.data$timestamp)){start_date.ts_p = min(county.data$timestamp)}
+    end_date_p = as.list(str_split(date_range_p, ' '))[[2]]
+    end_date.ts_p = as.numeric(as.POSIXct(as.Date(end_date_p)))
+    # ensure that the max does not fall below the min
+    if (end_date.ts_p < start_date.ts_p){ end_date.ts_p = start_date.ts_p}
+    
+    date_range2 <- date_range2()
+    start_date2 = as.list(str_split(date_range2, ' '))[[1]]
+    start_date.ts2 = as.numeric(as.POSIXct(as.Date(start_date2)))
+    if (start_date.ts2 < min(county.data$timestamp)){start_date.ts2 = min(county.data$timestamp)}
+    end_date2 = as.list(str_split(date_range2, ' '))[[2]]
+    end_date.ts2 = as.numeric(as.POSIXct(as.Date(end_date2)))
+    # ensure that the max does not fall below the min
+    if (end_date.ts2 < start_date.ts2){ end_date.ts2 = start_date.ts2}
+    
     # subset the relevant data
     new.data <- state.data[ which( state.data$timestamp >= start_date.ts & state.data$timestamp <= end_date.ts) , ]
-  
+    
     plotStateCases <- reactive(
       { 
         if(!deaths_confirm()){
@@ -80,9 +122,51 @@ server <- shinyServer(function(input, output, session) {
         
       })
     
+    plotCountyCases <- reactive({
+      if(!cumm_daily_switch2())
+      {
+        filtered_data = subset(county.data, select = c("Date", "timestamp", "timeplot", select_county()))
+        names(filtered_data)[4] = "Cases"
+        new_data2 = filtered_data[which(filtered_data$timestamp >= start_date.ts2 & filtered_data$timestamp <= end_date.ts2),]
+        displayPrettyChartCounty(new_data2, start_date.ts2, end_date.ts2)
+      }
+      else
+      {
+        filtered_data2 = subset(county.data.daily, select = c("Date", "timestamp", "timeplot", select_county()))
+        names(filtered_data2)[4] = "Cases"
+        new_data3 = filtered_data2[which(filtered_data2$timestamp >= start_date.ts2 & filtered_data2$timestamp <= end_date.ts2),]
+        displayPrettyChartCounty(new_data3, start_date.ts2, end_date.ts2)
+      }
+      })
+    
+    plotCountyPop <- reactive({
+      if(!pop_confirm())
+      {
+        filtered_data_p1 = subset(county.data, select = c("Date", "timestamp", "timeplot", select_county_p()))
+        names(filtered_data_p1)[4] = "Cases"
+        new_data_p1 = filtered_data_p1[which(filtered_data_p1$timestamp >= start_date.ts_p & filtered_data_p1$timestamp <= end_date.ts_p),]
+        displayPrettyChartCounty(new_data_p1, start_date.ts_p, end_date.ts_p)
+      }
+      else
+      {
+        filtered_data_p2 = subset(county.data.pop, select = c("Date", "timestamp", "timeplot", select_county_p()))
+        names(filtered_data_p2)[4] = "Cases"
+        new_data_p2 = filtered_data_p2[which(filtered_data_p2$timestamp >= start_date.ts_p & filtered_data_p2$timestamp <= end_date.ts_p),]
+        displayPrettyChartCounty_pop(new_data_p2, start_date.ts_p, end_date.ts_p)
+      }
+    })
+    
     # tie to a render event
     output$stateCasesPlot <- renderPlotly({
       plotStateCases()
+    })
+    
+    output$countyInfectionsPlot <- renderPlotly({
+      plotCountyCases()
+    })
+    
+    output$countyInfectionsPlot_P <- renderPlotly({
+      plotCountyPop()
     })
     
     # confirmed cases
