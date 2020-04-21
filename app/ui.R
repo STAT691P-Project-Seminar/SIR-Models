@@ -12,6 +12,7 @@ source.all("widgets/", grepstring="\\.R")
 # Define UI for the application
 ui <- dashboardPagePlus(
     enable_preloader = TRUE,
+    loading_duration = 4,
     # dashboard header  begins here
     dashboardHeaderPlus(
       title = "MA Covid-19 Tracker",

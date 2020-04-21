@@ -57,7 +57,7 @@ displayOtherCasesDistribution <- function(val, percentage){
 displayCasesRaceDistribution <- function(data){
   total_cases = data[8, 2]; total_deaths = data[8, 3]; 
   
-  hisp = infoBox("Hispanic", value = formatC(data[1, 2], big.mark = ","), subtitle = paste( round(data[1, 2]/total_cases *100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  hisp = infoBox("Hispanic", value = formatC(data[1, 2], big.mark = ","), subtitle = paste( round( (data[1, 2]/total_cases)*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
   white = infoBox("Non-Hispanic White", value = formatC(data[2, 2], big.mark = ","), subtitle = paste(round(data[2, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
   black = infoBox("Black/African American", value = formatC(data[3, 2], big.mark = ","), width = 12, subtitle = paste(round(data[3, 2]/total_cases*100, 2), "%", sep=""),fill = TRUE, color = "black")
   asian = infoBox("Non-Hispanic Asian", value = formatC(data[4, 2], big.mark = ","), subtitle = paste(round(data[4, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
