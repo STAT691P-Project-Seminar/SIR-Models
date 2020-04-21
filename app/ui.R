@@ -2,7 +2,7 @@ library(modules) # must load
 # load packages
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("ui")
-library(shiny); library(miceadds); library(shinydashboard); library(shinydashboardPlus)
+library(shiny); library(miceadds); library(shinydashboard); library(shinydashboardPlus); library(shinytoastr)
 library(shinyWidgets); library(dashboardthemes); library(ggplot2); library(plotly); library(leaflet);
 
 # source widgets
@@ -38,6 +38,8 @@ ui <- dashboardPagePlus(
       shinyDashboardThemes(
         theme = "grey_dark"
       ),
+      useToastr(), # for alert on data 
+      
       # add css file here
       tags$head( tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")),
       

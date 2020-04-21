@@ -35,9 +35,11 @@ getStateData <- function(){
     return(new_date)
   }
   
+  
   state.data$timestamp <- sapply(state.data$Date, getTimeStamp)
   state.data$timeplot <- sapply(state.data$timestamp, getPlottableDates)
   state.data$timeplot <- factor(state.data$timeplot, levels = state.data$timeplot) # this prevents ordering
+  
   
   # add the daily infections and deaths
   DailyCases <- c(state.data$Cases)[1]
@@ -50,4 +52,12 @@ getStateData <- function(){
   state.data$DailyDeaths = DailyDeaths
   
   return(state.data)
+}
+
+getLastUpdated <- function(){
+  
+  ts = getStateData()$timestamp[dim(getStateData())[1]]
+  my_date = anytime(ts + (24*60*60)) # add additional day
+  last_updated = format(my_date, format="%B %d %Y") #paste(format(my_date,"%b"), as.numeric(format(my_date,"%d")), sep=" ")
+  return(last_updated)
 }
