@@ -21,3 +21,5 @@ miceadds # allows the source.all function
 anytime # date manipulator
 
 tidyverse # manipulating dataframes
+
+shinytoastr # shwo toast notifications

@@ -17,3 +17,5 @@ ggplot2
 plotly
 
 leaflet
+
+shinytoastr

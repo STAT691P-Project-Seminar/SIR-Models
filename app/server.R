@@ -20,7 +20,7 @@ server <- shinyServer(function(input, output, session) {
   county.data.daily <- getCountyData_Daily()
   county.data.pop <- getCountyData_Pop()
   
-  ##gather inputs
+  #gather inputs
   date_range <- reactive({paste(input$daterangeCummulativeState)})
   cumm_daily_switch <- reactive({input$stateCummDailySwitch})
   deaths_confirm <- reactive({input$deathConfirmedCases})
@@ -58,6 +58,27 @@ server <- shinyServer(function(input, output, session) {
   
   ##listen to event change
   observe({
+    # alert user to current state of data
+    # get the last date on data file
+    #last_updated <- state.data$Date[dim(state.data)[1]]
+    message = paste("Data was last updated on", getLastUpdated(), sep = " ")
+    toastr_info(
+      message, title = "Last Updated", 
+      closeButton = TRUE, 
+      newestOnTop = FALSE,
+      progressBar = TRUE, 
+      position = c("bottom-full-width"), 
+      preventDuplicates = TRUE, 
+      showDuration = 400,
+      hideDuration = 1000, 
+      timeOut = 5000, 
+      extendedTimeOut = 1000,
+      showEasing = c("swing"), 
+      hideEasing = c("swing"),
+      showMethod = c("fadeIn"), 
+      hideMethod = c("fadeOut")
+    )
+    
     # construct user selected input range
     date_range <- date_range()
     #print(date_range)

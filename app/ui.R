@@ -2,7 +2,7 @@ library(modules) # must load
 # load packages
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("ui")
-library(shiny); library(miceadds); library(shinydashboard); library(shinydashboardPlus)
+library(shiny); library(miceadds); library(shinydashboard); library(shinydashboardPlus); library(shinytoastr)
 library(shinyWidgets); library(dashboardthemes); library(ggplot2); library(plotly); library(leaflet);
 
 # source widgets
@@ -12,6 +12,7 @@ source.all("widgets/", grepstring="\\.R")
 # Define UI for the application
 ui <- dashboardPagePlus(
     enable_preloader = TRUE,
+    loading_duration = 4,
     # dashboard header  begins here
     dashboardHeaderPlus(
       title = "MA Covid-19 Tracker",
@@ -38,6 +39,8 @@ ui <- dashboardPagePlus(
       shinyDashboardThemes(
         theme = "grey_dark"
       ),
+      useToastr(), # for alert on data 
+      
       # add css file here
       tags$head( tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")),
       
