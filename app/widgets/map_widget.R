@@ -8,7 +8,9 @@ mapWidget <- function(){
     solidHeader = FALSE, 
     collapsible = TRUE,
     p(
-      leafletOutput("stateMap")
+      switchInput(inputId = "staticSwitch", label = NULL, offLabel = "Static", onLabel = "Animation", inline = TRUE,  offStatus = "success", onStatus = "primary", size = "mini"),
+      plotlyOutput("stateMap1")
+      #plotOutput("stateMap2")
     )
   )
 }

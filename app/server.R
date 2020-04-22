@@ -1,17 +1,17 @@
 library(modules) # must load
-
-
-
 # load packages
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("server")
 library(shiny); library(miceadds); library(anytime); library(ggplot2); library(plotly); library(stringr);
-
+library(maps)
+library(ggthemes)
 # source modules
 source.all("modules/", grepstring="\\.R")
 
 # Define server logic required to draw a histogram
 server <- shinyServer(function(input, output, session) {
+  
+  
   
   #get data files
   state.data <- getStateData()
@@ -28,6 +28,7 @@ server <- shinyServer(function(input, output, session) {
   date_range2 <- reactive({paste(input$daterange_cummulative_county)}) 
   cumm_daily_switch2 <- reactive({input$countyCummDailySwitch})
   select_county <- reactive({paste(input$county)})
+  staticMap <- reactive({input$staticSwitch})
   
   date_range_p <- reactive({paste(input$daterange_cummulative_county_P)}) 
   pop_confirm <- reactive({input$countyPopSwitch})
@@ -78,6 +79,31 @@ server <- shinyServer(function(input, output, session) {
       showMethod = c("fadeIn"), 
       hideMethod = c("fadeOut")
     )
+    
+    static <- staticMap()
+    # maps comes here
+    plotStateMap <- reactive(
+      { 
+        
+        getStaticMap()
+        # if(!static){
+        #   
+        #   output$stateMap1 <- renderPlotly({
+        #     getStaticMap()
+        #   })
+        #   
+        # }else{
+        #   output$stateMap2 <- renderPlot({
+        #     getAnimMap()
+        #   })
+        #   
+        # }
+        
+      })
+    
+    output$stateMap1 <- renderPlotly({
+           getStaticMap()
+        })
     
     # construct user selected input range
     date_range <- date_range()

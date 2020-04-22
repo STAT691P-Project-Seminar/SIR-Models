@@ -7,6 +7,11 @@ getRaceData <- function(){
   return(race.data)
 }
 
+getCountyDataMap <- function(){
+  county.data <- read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/CountyLevelData-NA-Removed.csv")
+  return(county.data)
+}
+
 getCountyData <- function(){
   county.data <- read.csv("https://raw.githubusercontent.com/STAT691P-Project-Seminar/SIR-Models/master/data/CountyLevel.csv")
   return(county.data)
@@ -159,6 +164,24 @@ getCountyData_Pop = function()
 }  
   
 
+
+
+# date_char has format month/day/year
+getTimeStamp <- function(date_char){
+  
+  ls = as.list(str_split(date_char , '/'))[[1]] #month, day, year
+  date_char_format = paste(ls[3], "-", ls[1], "-", ls[2], sep='')
+  time_stamp = as.numeric(as.POSIXct(as.Date(date_char_format)))
+  return(time_stamp)
+}
+
+# this returns dates suitable for plotting
+getPlottableDates <- function(time_stamp){
+  my_date = anytime(time_stamp + (24*60*60)) # add additional day
+  new_date = paste(format(my_date,"%b"), as.numeric(format(my_date,"%d")), sep=" ")
+  return(new_date)
+}
+
 getStateData <- function(){
 
   # load the data files from guthub 
@@ -166,22 +189,6 @@ getStateData <- function(){
   #state.data = read.csv("../data/StateLevelData.csv")
   
   # add date time stamp
-  # date_char has format month/day/year
-  getTimeStamp <- function(date_char){
-    
-    ls = as.list(str_split(date_char , '/'))[[1]] #month, day, year
-    date_char_format = paste(ls[3], "-", ls[1], "-", ls[2], sep='')
-    time_stamp = as.numeric(as.POSIXct(as.Date(date_char_format)))
-    return(time_stamp)
-  }
-  
-  # this returns dates suitable for plotting
-  getPlottableDates <- function(time_stamp){
-    my_date = anytime(time_stamp + (24*60*60)) # add additional day
-    new_date = paste(format(my_date,"%b"), as.numeric(format(my_date,"%d")), sep=" ")
-    return(new_date)
-  }
-  
   
   state.data$timestamp <- sapply(state.data$Date, getTimeStamp)
   state.data$timeplot <- sapply(state.data$timestamp, getPlottableDates)
@@ -207,4 +214,59 @@ getLastUpdated <- function(){
   my_date = anytime(ts + (24*60*60)) # add additional day
   last_updated = format(my_date, format="%B %d %Y") #paste(format(my_date,"%b"), as.numeric(format(my_date,"%d")), sep=" ")
   return(last_updated)
+}
+
+### process map data
+
+getMapData <- function(){
+  
+  ma.county.data <- getCountyDataMap()
+  # case data (each row is unique county & data combination)
+  #ma.county.data <- read.csv("data/macountydata.csv")
+  ma.county.data <- ma.county.data[with(ma.county.data, order(County, Date)), ]
+  #View(ma.county.data)
+  # counties by state
+  county_df <- map_data('county') 
+  
+  # just MA
+  ma <- subset(county_df, region=="massachusetts")   #subset just for ma
+  names(ma)[6] <- "county"
+  
+  # get "center" of each county
+  cnames <- aggregate(cbind(long, lat) ~ county, data=ma, 
+                      FUN=function(x)mean(range(x)))
+  
+  Barnstable.lat <- rep(-70.31052, 37); Barnstable.long <- rep(41.81733, 37)
+  Berkshire.lat <- rep(-73.22114, 41); Berkshire.long <- rep(42.39315, 41)
+  Bristol.lat <- rep(-71.10120, 37); Bristol.long <- rep(41.79441, 37)
+  Dukes.lat <- rep(-70.63997, 30); Dukes.long <- rep(41.39047, 30)
+  Essex.lat <- rep(-70.97514, 41); Essex.long <- rep(42.65384, 41)
+  Franklin.lat <- rep(-72.61954, 33); Franklin.long <- rep(42.54211, 33)
+  Hampden.lat <- rep(-72.59948, 36); Hampden.long <- rep(42.17256, 36)
+  Hampshire.lat <- rep(-72.63099, 32); Hampshire.long <- rep(42.37023, 32)
+  Middlesex.lat <- rep(-71.44784, 41); Middlesex.long <- rep(42.44185, 41)
+  Nantucket.lat <- rep(-70.08133, 30);  Nantucket.long <- rep(41.31312, 30)
+  Norfolk.lat <- rep(-71.20147, 41); Norfolk.long <- rep(42.15823, 41)
+  Plymouth.lat <- rep(-70.81186, 36); Plymouth.long <- rep(41.96056, 36)
+  Suffolk.lat <- rep(-71.10693, 41); Suffolk.long <- rep(42.29861, 41)
+  Unknown.lat <- rep( 0, 37); Unknown.long <- rep(0, 37)
+  Worcester.lat <- rep(-71.89188, 41); Worcester.long <- rep(42.36736, 41)
+  
+  lot <- c(Barnstable.lat, Berkshire.lat, Bristol.lat, Dukes.lat, Essex.lat, Franklin.lat, Hampden.lat, Hampshire.lat,
+           Middlesex.lat, Nantucket.lat, Norfolk.lat, Plymouth.lat, Suffolk.lat, Unknown.lat, Worcester.lat)
+  
+  lat <- c(Barnstable.long, Berkshire.long, Bristol.long, Dukes.long, Essex.long, Franklin.long, Hampden.long, Hampshire.long,
+           Middlesex.long, Nantucket.long, Norfolk.long, Plymouth.long, Suffolk.long, Unknown.long, Worcester.long)
+  
+  #ma.county.data <- merge(ma.county.data, cnames)
+  ma.county.data$lat <- lat
+  ma.county.data$long <- lot
+  #remote the unkon
+  ma.county.data <- ma.county.data[!ma.county.data$County=="Unknown", ]
+  
+  ma.county.data$timestamp <- sapply(ma.county.data$Date, getTimeStamp)
+  ma.county.data$Date2 <- anydate(ma.county.data$timestamp + (24*60*60))
+  
+  return(list(ma = ma, county = ma.county.data))
+  
 }

@@ -8,7 +8,7 @@ stateCountyWidget <- function(addMap){
             box(
               width = NULL,
               height = 80,
-              title = h4("Data From mass.gov", align = "center"),
+              title = h4("Data From Mass.gov", align = "center"),
               status = NULL
             ),
             

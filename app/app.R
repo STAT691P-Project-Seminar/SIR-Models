@@ -1,3 +1,4 @@
+rm(list = ls())
 # source the core files
 source("ui.R")
 source("server.R")
