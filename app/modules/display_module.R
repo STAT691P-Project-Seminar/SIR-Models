@@ -40,12 +40,15 @@ displayDeathsGenderDistribution <- function(vec.value){
 
 displayMaleCasesDistribution <- function(val, percentage){
   
-  infoBox(title = "Male Confirmed Cases", value =  val, subtitle = paste(percentage, "%", sep=""), width = 4, icon = icon("male"), fill = TRUE, color = "black")
+  per.1000 <- (as.numeric(sub(",", '', val))/3058816)*1000
+  #infoBox(title = "Male Confirmed Cases", value =  val, subtitle = paste(percentage, "%", sep=""), width = 4, icon = icon("male"), fill = TRUE, color = "black")
+  infoBox(title = "Male Confirmed Cases", value =  val, subtitle = paste(round(per.1000, 0), " cases per 1000 men"), width = 4, icon = icon("male"), fill = TRUE, color = "black")
   
 }
 displayFemaleCasesDistribution <- function(val, percentage){
-  
-  infoBox(title = "Female Confirmed Cases", value =  val, subtitle = paste(percentage, "%", sep=""), width = 4, icon = icon("female"), fill = TRUE, color = "black")
+  per.1000 <- (as.numeric(sub(",", '', val))/3290281)*1000
+  #infoBox(title = "Female Confirmed Cases", value =  val, subtitle = paste(percentage, "%", sep=""), width = 4, icon = icon("female"), fill = TRUE, color = "black")
+  infoBox(title = "Female Confirmed Cases", value =  val, subtitle = paste(round(per.1000, 0), " cases per 1000 women"), width = 4, icon = icon("female"), fill = TRUE, color = "black")
   
 }
 displayOtherCasesDistribution <- function(val, percentage){
@@ -57,10 +60,10 @@ displayOtherCasesDistribution <- function(val, percentage){
 displayCasesRaceDistribution <- function(data){
   total_cases = data[8, 2]; total_deaths = data[8, 3]; 
   
-  hisp = infoBox("Hispanic", value = formatC(data[1, 2], big.mark = ","), subtitle = paste( round( (data[1, 2]/total_cases)*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
-  white = infoBox("Non-Hispanic White", value = formatC(data[2, 2], big.mark = ","), subtitle = paste(round(data[2, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
-  black = infoBox("Black/African American", value = formatC(data[3, 2], big.mark = ","), width = 12, subtitle = paste(round(data[3, 2]/total_cases*100, 2), "%", sep=""),fill = TRUE, color = "black")
-  asian = infoBox("Non-Hispanic Asian", value = formatC(data[4, 2], big.mark = ","), subtitle = paste(round(data[4, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  hisp = infoBox("Hispanic", value = formatC(data[1, 2], big.mark = ","), subtitle = paste( round( (data[1, 2]/847777.9)*1000, 0), " cases per 1000 Hispanics", sep=""), width = 12, fill = TRUE, color = "black")
+  white = infoBox("Non-Hispanic White", value = formatC(data[2, 2], big.mark = ","), subtitle = paste(round( (data[2, 2]/4921247)*1000, 0), " cases per 1000 Non-Hispanic Whites", sep=""), width = 12, fill = TRUE, color = "black")
+  black = infoBox("Black/African American", value = formatC(data[3, 2], big.mark = ","), width = 12, subtitle = paste(round((data[3, 2]/613432.8)*1000, 0), " cases per 1000 Blacks/African Americans", sep=""),fill = TRUE, color = "black")
+  asian = infoBox("Non-Hispanic Asian", value = formatC(data[4, 2], big.mark = ","), subtitle = paste(round((data[4, 2]/489367.7)*1000, 0), " case per 1000 Non-Hispanic Asians", sep=""), width = 12, fill = TRUE, color = "black")
   other = infoBox("Non-Hispanic Other", value = formatC(data[5, 2], big.mark = ","), subtitle = paste(round(data[5, 2]/total_cases*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
   unknown = infoBox("Unknown/Missing", value = formatC(data[6, 2]+data[7, 2], big.mark = ","), width = 12, subtitle = paste(round((data[6, 2]+data[7, 2])/total_cases*100, 2), "%", sep=""),fill = TRUE, color = "black")
   #missing = infoBox("Missing", value = formatC(data[7, 2], big.mark = ","), width = 12, subtitle = paste(round(data[7, 2]/total_cases*100, 2), "%", sep=""),fill = TRUE)
@@ -72,10 +75,10 @@ displayCasesRaceDistribution <- function(data){
 displayDeathsRaceDistribution <- function(data){
   total_deaths = data[8, 3]; 
   #infoBox("Missing", value = data[7, 3], width = 12, subtitle = paste(data[7, 3]/total_deaths, "%", sep=""),fill = TRUE)
-  hisp = infoBox("Hispanic", value = data[1, 3], subtitle = paste(round(data[1, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
-  white = infoBox("Non-Hispanic White", value = data[2, 3], subtitle = paste(round(data[2, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
-  black = infoBox("Black/African American", value = data[3, 3], width = 12, subtitle = paste(round(data[3, 3]/total_deaths*100, 2), "%", sep=""),fill = TRUE, color = "black")
-  asian = infoBox("Non-Hispanic Asian", value = data[4, 3], subtitle = paste(round(data[4, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
+  hisp = infoBox("Hispanic", value = data[1, 3], subtitle = paste(round((data[1, 3]/847777.9)*10000, 0), " death per 10000 Hispanics", sep=""), width = 12, fill = TRUE, color = "black")
+  white = infoBox("Non-Hispanic White", value = data[2, 3], subtitle = paste(round((data[2, 3]/4921247)*10000, 0), " death per 10000 Non-Hispanic Whites", sep=""), width = 12, fill = TRUE, color = "black")
+  black = infoBox("Black/African American", value = data[3, 3], width = 12, subtitle = paste(round((data[3, 3]/613432.8)*10000, 0), " death per 10000 Blacks/African Americans", sep=""),fill = TRUE, color = "black")
+  asian = infoBox("Non-Hispanic Asian", value = data[4, 3], subtitle = paste(round((data[4, 3]/489367.7)*10000, 0), " death per 10000 Non-Hispanic Asians", sep=""), width = 12, fill = TRUE, color = "black")
   other = infoBox("Non-Hispanic Other", value = data[5, 3], subtitle = paste(round(data[5, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
   unknown = infoBox("Unknown/Missing", value = data[6, 3]+data[7, 3], width = 12, subtitle = paste(round((data[6, 3]+data[7, 3])/total_deaths*100, 2), "%", sep=""),fill = TRUE, color = "black")
   #missing = infoBox("Missing", value = data[7, 3], width = 12, subtitle = paste(data[7, 3]/total_deaths*100, "%", sep=""),fill = TRUE)

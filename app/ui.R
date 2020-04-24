@@ -3,7 +3,7 @@ library(modules) # must load
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("ui")
 library(shiny); library(miceadds); library(shinydashboard); library(shinydashboardPlus); library(shinytoastr)
-library(shinyWidgets); library(dashboardthemes); library(ggplot2); library(plotly); library(leaflet);
+library(shinyWidgets); library(dashboardthemes); library(ggplot2); library(plotly); library(leaflet)
 
 # source widgets
 source.all("widgets/", grepstring="\\.R")

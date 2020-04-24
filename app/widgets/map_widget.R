@@ -8,8 +8,19 @@ mapWidget <- function(){
     solidHeader = FALSE, 
     collapsible = TRUE,
     p(
-      switchInput(inputId = "staticSwitch", label = NULL, offLabel = "Static", onLabel = "Animation", inline = TRUE,  offStatus = "success", onStatus = "primary", size = "mini"),
-      plotlyOutput("stateMap1")
+      fluidRow(
+        column(width = 6,
+               radioButtons("mapType", "Map Type:",
+                            c("Static" = "static",
+                              "Thematic" = "thematic"))
+               #switchInput(inputId = "staticSwitch", label = NULL, offLabel = "Static", onLabel = "Animation", inline = TRUE,  offStatus = "success", onStatus = "primary", size = "mini")
+               ),
+        column(width = 6,
+               h4("Toggle Scale: "),
+               switchInput(inputId = "proportionSwitch", label = NULL, offLabel = "Total Cases", onLabel = "Cases per 1000", inline = TRUE,  offStatus = "success", onStatus = "primary", size = "mini")
+        )
+      ),
+      addSpinner(plotlyOutput("stateMap1", height = "500px"), spin = "double-bounce", color = "red")
       #plotOutput("stateMap2")
     )
   )

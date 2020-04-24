@@ -15,7 +15,8 @@ homeWidget <- function(){
             #  status = NULL
             #),
             fluidRow(
-              box( title =  h4("Massachusetts Corona Virus Data", align = "center"), width = 12, fill = TRUE, background = "black")
+              valueBoxOutput("header", width = 12)
+              #box( title =  h4("Massachusetts Corona Virus Data ", br(), h6("Data was last updated on", getLastUpdated(), align = "center") , align = "center"), width = 12, fill = TRUE, background = "black")
             ),
             fluidRow(
               # A static infoBox

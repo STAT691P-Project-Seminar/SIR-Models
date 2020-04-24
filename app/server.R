@@ -29,6 +29,7 @@ server <- shinyServer(function(input, output, session) {
   cumm_daily_switch2 <- reactive({input$countyCummDailySwitch})
   select_county <- reactive({paste(input$county)})
   staticMap <- reactive({input$staticSwitch})
+  per1000Switch <- reactive({input$proportionSwitch})
   
   date_range_p <- reactive({paste(input$daterange_cummulative_county_P)}) 
   pop_confirm <- reactive({input$countyPopSwitch})
@@ -57,52 +58,40 @@ server <- shinyServer(function(input, output, session) {
                        max = anydate(max(county.data$timestamp) + (24*60*60))
   )
   
+  # toast information
+  message = paste("Data was last updated on", getLastUpdated(), sep = " ")
+  toastr_info(
+    message, title = "Last Updated", 
+    closeButton = TRUE, 
+    newestOnTop = FALSE,
+    progressBar = TRUE, 
+    position = c("bottom-full-width"), 
+    preventDuplicates = TRUE, 
+    showDuration = 400,
+    hideDuration = 1000, 
+    timeOut = 5000, 
+    extendedTimeOut = 1000,
+    showEasing = c("swing"), 
+    hideEasing = c("swing"),
+    showMethod = c("fadeIn"), 
+    hideMethod = c("fadeOut")
+  )
+  
   ##listen to event change
   observe({
-    # alert user to current state of data
-    # get the last date on data file
-    #last_updated <- state.data$Date[dim(state.data)[1]]
-    message = paste("Data was last updated on", getLastUpdated(), sep = " ")
-    toastr_info(
-      message, title = "Last Updated", 
-      closeButton = TRUE, 
-      newestOnTop = FALSE,
-      progressBar = TRUE, 
-      position = c("bottom-full-width"), 
-      preventDuplicates = TRUE, 
-      showDuration = 400,
-      hideDuration = 1000, 
-      timeOut = 5000, 
-      extendedTimeOut = 1000,
-      showEasing = c("swing"), 
-      hideEasing = c("swing"),
-      showMethod = c("fadeIn"), 
-      hideMethod = c("fadeOut")
-    )
+    # set header
+   output$header <- renderValueBox({
+      valueBox(h4("Massachusetts Corona Virus Data ", align = "center"),
+               h6("Data was last updated on", getLastUpdated(), align = "center"),
+               color = "black"
+               )
+    })
     
     static <- staticMap()
-    # maps comes here
-    plotStateMap <- reactive(
-      { 
-        
-        getStaticMap()
-        # if(!static){
-        #   
-        #   output$stateMap1 <- renderPlotly({
-        #     getStaticMap()
-        #   })
-        #   
-        # }else{
-        #   output$stateMap2 <- renderPlot({
-        #     getAnimMap()
-        #   })
-        #   
-        # }
-        
-      })
+    per1000Switch <- per1000Switch()
     
     output$stateMap1 <- renderPlotly({
-           getStaticMap()
+           getStaticMap(per1000Switch)
         })
     
     # construct user selected input range
@@ -205,7 +194,7 @@ server <- shinyServer(function(input, output, session) {
     })
     # recovered
     output$totalRecovered <- renderInfoBox({
-      displayTotalRecovered(0)
+      displayTotalRecovered("(?)")
     })
     
     # display for state and county
@@ -220,7 +209,7 @@ server <- shinyServer(function(input, output, session) {
     
     # recovered
     output$recoveredSC<- renderInfoBox({
-      displayTotalRecovered(0)
+      displayTotalRecovered("(?)")
     })
     # male confirmed cases
     output$maleConfirmedCases <- renderInfoBox({
