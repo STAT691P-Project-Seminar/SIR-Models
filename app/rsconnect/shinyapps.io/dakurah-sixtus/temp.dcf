@@ -5,8 +5,8 @@ account: dakurah-sixtus
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2134101
-bundleId: 3059374
+bundleId: 3059689
 url: https://dakurah-sixtus.shinyapps.io/temp/
-when: 1587731184.64628
+when: 1587735384.18419
 asMultiple: FALSE
 asStatic: FALSE

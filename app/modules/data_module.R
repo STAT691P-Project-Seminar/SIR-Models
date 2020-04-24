@@ -211,7 +211,7 @@ getStateData <- function(){
 getLastUpdated <- function(){
   
   ts = getStateData()$timestamp[dim(getStateData())[1]]
-  my_date = anytime(ts + (24*60*60)) # add additional day
+  my_date = anydate(ts + (24*60*60)) # add additional day
   last_updated = format(my_date, format="%B %d %Y") #paste(format(my_date,"%b"), as.numeric(format(my_date,"%d")), sep=" ")
   return(last_updated)
 }
@@ -285,7 +285,7 @@ getMapData <- function(){
   
   ma.county.data$timestamp <- sapply(ma.county.data$Date, getTimeStamp)
   ma.county.data$Date2 <- anydate(ma.county.data$timestamp + (24*60*60))
-  View(ma.county.data)
+  #View(ma.county.data)
   
   return(list(ma = ma, county = ma.county.data))
   
