@@ -76,8 +76,8 @@ displayDeathsRaceDistribution <- function(data){
   total_deaths = data[8, 3]; 
   #infoBox("Missing", value = data[7, 3], width = 12, subtitle = paste(data[7, 3]/total_deaths, "%", sep=""),fill = TRUE)
   hisp = infoBox("Hispanic", value = data[1, 3], subtitle = paste(round((data[1, 3]/847777.9)*10000, 0), " death per 10000 Hispanics", sep=""), width = 12, fill = TRUE, color = "black")
-  white = infoBox("Non-Hispanic White", value = data[2, 3], subtitle = paste(round((data[2, 3]/4921247)*10000, 0), " death per 10000 Non-Hispanic Whites", sep=""), width = 12, fill = TRUE, color = "black")
-  black = infoBox("Black/African American", value = data[3, 3], width = 12, subtitle = paste(round((data[3, 3]/613432.8)*10000, 0), " death per 10000 Blacks/African Americans", sep=""),fill = TRUE, color = "black")
+  white = infoBox("Non-Hispanic White", value = data[2, 3], subtitle = paste(round((data[2, 3]/4921247)*10000, 0), " deaths per 10000 Non-Hispanic Whites", sep=""), width = 12, fill = TRUE, color = "black")
+  black = infoBox("Black/African American", value = data[3, 3], width = 12, subtitle = paste(round((data[3, 3]/613432.8)*10000, 0), " deaths per 10000 Blacks/African Americans", sep=""),fill = TRUE, color = "black")
   asian = infoBox("Non-Hispanic Asian", value = data[4, 3], subtitle = paste(round((data[4, 3]/489367.7)*10000, 0), " death per 10000 Non-Hispanic Asians", sep=""), width = 12, fill = TRUE, color = "black")
   other = infoBox("Non-Hispanic Other", value = data[5, 3], subtitle = paste(round(data[5, 3]/total_deaths*100, 2), "%", sep=""), width = 12, fill = TRUE, color = "black")
   unknown = infoBox("Unknown/Missing", value = data[6, 3]+data[7, 3], width = 12, subtitle = paste(round((data[6, 3]+data[7, 3])/total_deaths*100, 2), "%", sep=""),fill = TRUE, color = "black")
