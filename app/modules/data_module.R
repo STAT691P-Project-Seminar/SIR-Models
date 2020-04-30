@@ -1,5 +1,11 @@
 # put all data processing functions here
 
+# convert first character to upper
+firstup <- function(x) {
+  substr(x, 1, 1) <- toupper(substr(x, 1, 1))
+  x
+}
+
 getRaceData <- function(){
   
   #no preprocessing necessary
@@ -104,6 +110,7 @@ getCountyData_TS = function()
     return(new_date)
   }
   
+  library(stringr)
   county.data$timestamp <- sapply(county.data$Date, getTimeStamp)
   county.data$timeplot <- sapply(county.data$timestamp, getPlottableDates)
   county.data$timeplot <- factor(county.data$timeplot, levels = county.data$timeplot) # this prevents ordering
@@ -290,3 +297,4 @@ getMapData <- function(){
   return(list(ma = ma, county = ma.county.data))
   
 }
+

@@ -1,7 +1,8 @@
-getStaticMap <- function(switchPop){
+getStaticMap <- function(switchPop, thematic_date){
   
   ma = getMapData()$ma
   ma.county.data = getMapData()$county
+  ma.county.data <- ma.county.data[ma.county.data$Date2==thematic_date, ]
   ma.county.data$Cases.Per.1000 <- round((ma.county.data$Cases/ma.county.data$Population * 1000), 0)
   static <- ggplot(ma, aes(x=long, y=lat)) + geom_polygon(aes(group=group), colour='white') +
     theme(

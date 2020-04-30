@@ -28,12 +28,13 @@ server <- shinyServer(function(input, output, session) {
   date_range2 <- reactive({paste(input$daterange_cummulative_county)}) 
   cumm_daily_switch2 <- reactive({input$countyCummDailySwitch})
   select_county <- reactive({paste(input$county)})
-  staticMap <- reactive({input$staticSwitch})
+  staticMap <- reactive({input$mapType})
   per1000Switch <- reactive({input$proportionSwitch})
   
   date_range_p <- reactive({paste(input$daterange_cummulative_county_P)}) 
   pop_confirm <- reactive({input$countyPopSwitch})
   select_county_p <- reactive({paste(input$county_p)})
+  thematicDate <- reactive({paste(input$slideMapDate)})
   
   #set the default values
   # update the date range input values
@@ -57,6 +58,11 @@ server <- shinyServer(function(input, output, session) {
                        #min = anydate(min(state.data$timestamp) + (24*60*60)), this does not work .. control it below
                        max = anydate(max(county.data$timestamp) + (24*60*60))
   )
+  updateSliderInput(session, "slideMapDate", 
+                    min = anydate(min(county.data$timestamp)+ (24*60*60)), 
+                    max = anydate(max(county.data$timestamp)+ (24*60*60)),
+                    value = anydate(max(county.data$timestamp)+ (24*60*60)), step = 1
+                    )
   
   # toast information
   message = paste("Data was last updated on", getLastUpdated(), sep = " ")
@@ -89,10 +95,18 @@ server <- shinyServer(function(input, output, session) {
     
     static <- staticMap()
     per1000Switch <- per1000Switch()
-    
-    output$stateMap1 <- renderPlotly({
-           getStaticMap(per1000Switch)
-        })
+    thematic_date <- thematicDate()
+    print(thematic_date)
+    if(static=="static"){
+
+      output$stateMap1 <- renderPlotly({
+        getStaticMap(per1000Switch, thematic_date)
+      })
+    }else if(static=="thematic"){
+      output$stateMap1 <- renderPlotly({
+        getCountyMap(per1000Switch, thematic_date)
+      })
+    }
     
     # construct user selected input range
     date_range <- date_range()
