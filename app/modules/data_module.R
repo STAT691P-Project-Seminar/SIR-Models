@@ -189,6 +189,15 @@ getPlottableDates <- function(time_stamp){
   return(new_date)
 }
 
+# date_char has format month/day/year
+getTimeSIR <- function(date_char2){
+  
+  ls = as.list(str_split(date_char2 , '/'))[[1]] #month, day, year
+  date_char_format = paste(ls[3], "-", ls[1], "-", ls[2], sep='')
+  
+  return(date_char_format)
+}
+
 getStateData <- function(){
 
   # load the data files from guthub 
