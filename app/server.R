@@ -107,7 +107,7 @@ server <- shinyServer(function(input, output, session) {
     static <- staticMap()
     per1000Switch <- per1000Switch()
     thematic_date <- thematicDate()
-    print(thematic_date)
+    #print(thematic_date)
     if(static=="static"){
 
       output$stateMap1 <- renderPlotly({
