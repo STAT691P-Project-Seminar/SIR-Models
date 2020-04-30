@@ -19,6 +19,9 @@ server <- shinyServer(function(input, output, session) {
   county.data <- getCountyData_TS()
   county.data.daily <- getCountyData_Daily()
   county.data.pop <- getCountyData_Pop()
+  state.data2 <- state.data
+  state.data2$Date <- sapply(state.data2$Date, getTimeSIR)
+  state.data2$Date <- as.Date(state.data2$Date)
   
   #gather inputs
   date_range <- reactive({paste(input$daterangeCummulativeState)})
@@ -35,6 +38,14 @@ server <- shinyServer(function(input, output, session) {
   pop_confirm <- reactive({input$countyPopSwitch})
   select_county_p <- reactive({paste(input$county_p)})
   thematicDate <- reactive({paste(input$slideMapDate)})
+  
+  recov_day <- reactive({input$recoveryDays})
+  beta <- reactive({input$infectionRate})
+  Nos <- reactive({input$N})
+  initial <- reactive({input$initInf})
+  time_sim <- reactive({input$Tmax})
+  model_switch <- reactive({paste(input$yscale)})
+  model_reset <- reactive({paste(input$reset)}) 
   
   #set the default values
   # update the date range input values
@@ -185,6 +196,37 @@ server <- shinyServer(function(input, output, session) {
       }
     })
     
+    if(model_reset() == 1)
+    {
+      updateSliderInput(session, "recoveryDays", min = 0, max = 30, value = 14)
+      updateSliderInput(session, "infectionRate", min = 0, max = 1, value = 0.3)
+      updateNumericInput(session, "N", value = 85000, max = 10^10, min = 1000)
+      updateNumericInput(session, "initInf", value = 1, min = 1)
+      updateSliderInput(session, "Tmax", min = 0, max = 365, value = 75)
+    }
+    
+    plotsir1 <- reactive({
+      if(model_switch() == "linear")
+      {
+      sir_data <- sir_sim2(N = Nos(), alpha = 1/recov_day(), beta = beta(), initInf = initial(), TS = time_sim()) 
+      displayPrettyChart_SIR(sir_data, state.data2)
+      #ggplot(sir_data, aes(x = Date, y = I_tcom)) + geom_line() + geom_point(state.data2, mapping = aes(x = Date, y = Cases)) + xlab("") + ylab("Cases")
+      }
+      else
+      {
+      sir_data <- sir_sim3(N = Nos(), alpha = 1/recov_day(), beta = beta(), initInf = initial(), TS = time_sim()) 
+      state.data2$Cases = state.data2$Cases/Nos()
+      state.data2$Cases = round(state.data2$Cases, 2)
+      displayPrettyChart_SIR(sir_data, state.data2)
+      }
+    })
+    
+    plotsir2 <- reactive({
+      sir_data2 <- sir_sim2(N = Nos(), alpha = 1/recov_day(), beta = beta(), initInf = initial(), TS = time_sim()) 
+      displayPrettyChart_SIR2(sir_data2)
+      #ggplot(sir_data, aes(x = Date, y = I_tcom)) + geom_line() + geom_point(state.data2, mapping = aes(x = Date, y = Cases)) + xlab("") + ylab("Cases")
+    })
+    
     # tie to a render event
     output$stateCasesPlot <- renderPlotly({
       plotStateCases()
@@ -196,6 +238,14 @@ server <- shinyServer(function(input, output, session) {
     
     output$countyInfectionsPlot_P <- renderPlotly({
       plotCountyPop()
+    })
+    
+    output$spreadPlot <- renderPlotly({
+      plotsir1()
+    })
+    
+    output$plotSIR <- renderPlotly({
+      plotsir2()
     })
     
     # confirmed cases
