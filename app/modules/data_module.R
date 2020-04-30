@@ -298,3 +298,70 @@ getMapData <- function(){
   
 }
 
+# SIR Simulation Model
+
+sir_sim2 = function(N, alpha, beta, initInf, TS)
+{ 
+  delta = 1
+  times = seq(0, TS, by = delta)
+  Date = as.Date(vector())
+  S_t = vector()
+  I_t = vector()
+  R_t = vector()
+  I_t[1] = initInf
+  S_t[1] = N - initInf
+  R_t[1] = 0
+  Date[1] = as.Date("2020-03-02")
+  
+  for(i in 2:length(times))
+  {
+    S_t[i] = S_t[i-1] * (1 - (delta * beta * I_t[i-1] * (1/N)))
+    R_t[i] = R_t[i-1] + delta * alpha * I_t[i-1]
+    I_t[i] = I_t[i-1] + ((beta * (S_t[i-1]/N) * I_t[i-1]) - (alpha * I_t[i-1])) * delta
+    Date[i] = Date[i-1] + 1
+  }
+  
+  I_tcom = I_t + R_t
+  df1 = as.data.frame(cbind(times, S_t, R_t, I_t, I_tcom))
+  df1$I_tcom = round(df1$I_tcom, 2)
+  df1$I_t = round(df1$I_t, 2)
+  df1$Date = Date
+  #df1$Date = as.numeric(as.POSIXct(df1$Date))
+  #df1$Date = getPlottableDates(df1$Date)
+  
+  return(df1)
+  
+}
+
+sir_sim3 = function(N, alpha, beta, initInf, TS)
+{ 
+  delta = 1
+  times = seq(0, TS, by = delta)
+  Date = as.Date(vector())
+  S_t = vector()
+  I_t = vector()
+  R_t = vector()
+  I_t[1] = initInf/N
+  S_t[1] = (N - initInf)/N
+  R_t[1] = 0
+  Date[1] = as.Date("2020-03-02")
+  
+  for(i in 2:length(times))
+  {
+    S_t[i] = S_t[i-1] * (1 - (delta * beta * I_t[i-1]))
+    R_t[i] = R_t[i-1] + delta * alpha * I_t[i-1]
+    I_t[i] = I_t[i-1] + ((beta * S_t[i-1] * I_t[i-1]) - (alpha * I_t[i-1])) * delta
+    Date[i] = Date[i-1] + 1
+  }
+  
+  I_tcom = I_t + R_t
+  df1 = as.data.frame(cbind(times, S_t, R_t, I_t, I_tcom))
+  df1$I_tcom = round(df1$I_tcom, 2)
+  df1$I_t = round(df1$I_t, 2)
+  df1$Date = Date
+  #df1$Date = as.numeric(as.POSIXct(df1$Date))
+  #df1$Date = getPlottableDates(df1$Date)
+  
+  return(df1)
+  
+}
