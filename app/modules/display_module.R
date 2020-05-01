@@ -202,3 +202,59 @@ displayPrettyChartCounty_pop <- function(new.data2, start_date.ts2, end_date.ts2
     geom_bar(stat = "identity", fill = "#91341d") + xlab("") + ylab("Confirmed Cases Per 1000 Pop")
   ggplotly(g, tooltip = c("Date", "Cases"))
 }
+displayPrettyChart_SIR <- function(new.data3, state.data3){
+  new.data3$Cases = new.data3$I_tcom
+ g <- ggplot(data = new.data3, mapping = aes(x = Date, y = Cases)) + 
+    theme(
+      axis.text.x = element_text(colour = "white"), 
+      axis.text.y = element_text(colour = "white"),
+      axis.title.y = element_text(colour = "white"),
+      plot.title = element_text(colour = "white"),
+      legend.position ="none",
+      plot.background = element_rect(fill = "#282b29"), 
+      panel.background = element_rect(fill = "#282b29"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    ) + 
+    geom_line(colour = "#CC0000") + geom_point(state.data3, mapping = aes(x = Date, y = Cases), colour = "#CC0000") + 
+   xlab("") + ylab("Infected + Recovered") + labs(title = "Dots: Observed Data and Smooth line: Simulated Data") 
+ ggplotly(g, tooltip = c("Date", "Cases"))
+}
+
+# "#56B4E9"
+
+displayPrettyChart_SIR2 <- function(new.data4){
+  new.data4$Cases = new.data4$I_t
+ g <- ggplot(data = new.data4, mapping = aes(x = Date, y = Cases)) + 
+    theme(
+      axis.text.x = element_text(colour = "white"), 
+      axis.text.y = element_text(colour = "white"),
+      axis.title.y = element_text(colour = "white"),
+      legend.position="none",
+      plot.background = element_rect(fill = "#282b29"), 
+      panel.background = element_rect(fill = "#282b29"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    ) + 
+    geom_line(colour = "#CC0000") + xlab("") + ylab("Number of Infected")
+ ggplotly(g, tooltip = c("Date", "Cases"))
+}
+
+displayPrettySIRSimulation <- function(sim.data){
+  colors<-c("Susceptible"="blue","Infected"="red","Recovered"="green")
+    g <- ggplot(data = sim.data) + geom_line(aes(time, Susceptible, color = "Susceptible", label1 = Date)) + 
+      geom_line(aes(time, Infected, color = "Infected", label1 = Date)) + 
+      geom_line(aes(time, Recovered, color = "Recovered", label1 = Date)) + ylab("")+
+      labs( x = "Day", color = "Legend")+
+      scale_color_manual(values = colors) + theme(legend.position = c(0.14, 0.86))+
+    theme(
+      axis.text.x = element_text(colour = "white"), 
+      axis.text.y = element_text(colour = "white"),
+      axis.title.y = element_text(colour = "white"),
+      plot.background = element_rect(fill = "#282b29"), 
+      panel.background = element_rect(fill = "#282b29"),
+      panel.grid.major.x = element_blank(),
+      panel.grid.minor.x = element_blank()
+    )
+  ggplotly(g, tooltip = c("Date", "Susceptible", "Infected", "Recovered"))
+}

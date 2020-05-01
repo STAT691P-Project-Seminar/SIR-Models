@@ -189,6 +189,15 @@ getPlottableDates <- function(time_stamp){
   return(new_date)
 }
 
+# date_char has format month/day/year
+getTimeSIR <- function(date_char2){
+  
+  ls = as.list(str_split(date_char2 , '/'))[[1]] #month, day, year
+  date_char_format = paste(ls[3], "-", ls[1], "-", ls[2], sep='')
+  
+  return(date_char_format)
+}
+
 getStateData <- function(){
 
   # load the data files from guthub 
@@ -298,3 +307,109 @@ getMapData <- function(){
   
 }
 
+# SIR Simulation Model
+
+sir_sim2 = function(N, alpha, beta, initInf, TS)
+{ 
+  test.perc <- .0025
+  test.till <- (length(seq(as.Date("2020-4-30"), as.Date(Sys.time()) , by = "+1 day")) -1) * 10000
+  N <- (N*test.perc) + 275000 + test.till 
+  delta = 1
+  times = seq(0, TS, by = delta)
+  Date = as.Date(vector())
+  S_t = vector()
+  I_t = vector()
+  R_t = vector()
+  I_t[1] = initInf
+  S_t[1] = N - initInf
+  R_t[1] = 0
+  Date[1] = as.Date("2020-03-02")
+  
+  for(i in 2:length(times))
+  {
+    S_t[i] = S_t[i-1] * (1 - (delta * beta * I_t[i-1] * (1/N)))
+    R_t[i] = R_t[i-1] + delta * alpha * I_t[i-1]
+    I_t[i] = I_t[i-1] + ((beta * (S_t[i-1]/N) * I_t[i-1]) - (alpha * I_t[i-1])) * delta
+    Date[i] = Date[i-1] + 1
+  }
+  
+  I_tcom = I_t + R_t
+  df1 = as.data.frame(cbind(times, S_t, R_t, I_t, I_tcom))
+  df1$I_tcom = round(df1$I_tcom, 0)
+  df1$I_t = round(df1$I_t, 0)
+  df1$Date = Date
+  #df1$Date = as.numeric(as.POSIXct(df1$Date))
+  #df1$Date = getPlottableDates(df1$Date)
+  
+  return(df1)
+  
+}
+
+sir_simulate <- function(beta, gamma, N, I0, time) {
+  test.perc <- .0025
+  # 10000 test per day
+  test.till <- (length(seq(as.Date("2020-4-30"), as.Date(Sys.time()) , by = "+1 day")) -1) * 10000
+  N <- (N*test.perc) + 275000 + test.till 
+  R0 = 0; S0 = N - I0
+  print(time)
+  times <- c(1:time)
+  beta <- beta/N
+  sir_equations <- function(time, variables, parameters) 
+  {
+    with(as.list(c(variables, parameters)), {
+      dS <- -beta * I * S
+      dI <-  beta * I * S - gamma * I
+      dR <-  gamma * I
+      return(list(c(dS, dI, dR)))})
+  }
+  
+  parameters_values <- c(beta  = beta, gamma = gamma)
+  
+  # the initial values of variables:
+  initial_values <- c(S = S0, I = I0, R = R0)
+  
+  # solving
+  out <- ode(initial_values, times, sir_equations, parameters_values)
+  df <- data.frame(out)
+  st <- as.Date("2020-3-2")
+  ll <- seq(st, by = "+1 day", length.out = time)
+  df <- data.frame("time" = df$time, "Susceptible" = round(df$S, 0), "Infected" = round(df$I, 0), "Recovered" = round(df$R, 0), "Date" = ll)
+  # returning the output:
+  return (df)
+}
+
+sir_sim3 = function(N, alpha, beta, initInf, TS)
+{ 
+  test.perc <- .0025
+  test.till <- (length(seq(as.Date("2020-4-30"), as.Date(Sys.time()) , by = "+1 day")) -1) * 10000
+  N <- (N*test.perc) + 275000 + test.till 
+  delta = 1
+  times = seq(0, TS, by = delta)
+  Date = as.Date(vector())
+  S_t = vector()
+  I_t = vector()
+  R_t = vector()
+  I_t[1] = initInf/N
+  S_t[1] = (N - initInf)/N
+  R_t[1] = 0
+  Date[1] = as.Date("2020-03-02")
+  
+  for(i in 2:length(times))
+  {
+    S_t[i] = S_t[i-1] * (1 - (delta * beta * I_t[i-1]))
+    R_t[i] = R_t[i-1] + delta * alpha * I_t[i-1]
+    I_t[i] = I_t[i-1] + ((beta * S_t[i-1] * I_t[i-1]) - (alpha * I_t[i-1])) * delta
+    Date[i] = Date[i-1] + 1
+  }
+  
+  I_tcom = I_t + R_t
+  df1 = as.data.frame(cbind(times, S_t, R_t, I_t, I_tcom))
+  df1$I_tcom = round(df1$I_tcom, 2)
+  df1$I_t = round(df1$I_t, 2)
+  df1$Date = Date
+  #df1$Date = as.numeric(as.POSIXct(df1$Date))
+  #df1$Date = getPlottableDates(df1$Date)
+  
+  return(df1)
+  
+}
