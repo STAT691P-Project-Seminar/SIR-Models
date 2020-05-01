@@ -3,7 +3,7 @@ getCountyMap <- function(switchPop, thematic_date){
   ma = getMapData()$ma
   ma.county.data = getMapData()$county
   ma.county.data$Cases.Per.1000 <- round((ma.county.data$Cases/ma.county.data$Population * 1000), 0)
-  
+  ma.county.data$County <- as.character(ma.county.data$County)
   colnames(ma)[6] <- "County"
   ma$County <- firstup(ma$County)
   

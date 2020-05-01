@@ -3,6 +3,7 @@ library(modules) # must load
 packages.Self <- modules::use("core/libs.R")
 packages.Self$getPackages("server")
 library(shiny); library(miceadds); library(anytime); library(ggplot2); library(plotly); library(stringr);
+library(tidyverse)
 library(maps)
 library(ggthemes)
 library(deSolve)
